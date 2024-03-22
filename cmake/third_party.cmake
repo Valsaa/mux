@@ -1,13 +1,5 @@
 include(FetchContent)
 
-# gsl
-FetchContent_Declare(
-    gsl
-    GIT_REPOSITORY  https://github.com/microsoft/GSL.git
-    GIT_TAG         v4.0.0
-    GIT_PROGRESS    TRUE
-)
-
 # spdlog
 FetchContent_Declare(
     spdlog
@@ -24,8 +16,14 @@ FetchContent_Declare(
     GIT_PROGRESS    TRUE
 )
 
+# googletest
+FetchContent_Declare(
+    googletest
+    URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
+)
+
 FetchContent_MakeAvailable(
     spdlog
-    gsl
     cxxopts
+    googletest
 )

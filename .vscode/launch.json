@@ -5,13 +5,23 @@
       "name": "(lldb) Launch",
       "type": "lldb",
       "request": "launch",
-      // Resolved by CMake Tools:
       "program": "${command:cmake.launchTargetPath}",
       "args": [
         "-l",
         "8000"
       ],
-      "cwd": "${workspaceFolder}",
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "(ctest) Launch",
+      "type": "cppdbg",
+      "request": "launch",
+      // Resolved by CMake Tools:
+      "cwd": "${cmake.testWorkingDirectory}",
+      "program": "${cmake.testProgram}",
+      "args": [
+        "${cmake.testArgs}"
+      ],
     }
   ]
 }

@@ -1,0 +1,5 @@
+# Disable clang-format in .devcontainer folder to fix some artefacts produced
+# by pre-commit clang-format hook
+# Example: unwanted 2-spaces indentation in devcontainer.json starting at L:2)
+DisableFormat: true
+SortIncludes: Never

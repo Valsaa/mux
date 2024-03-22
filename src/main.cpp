@@ -3,8 +3,8 @@
 #include <cxxopts.hpp>
 #include <iostream>
 
+#include "core/socket.h"
 #include "logger.h"
-#include "socket.h"
 
 int main(const int argc, const char *argv[]) {
   std::string hostname{""};
