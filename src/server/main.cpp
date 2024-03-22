@@ -3,6 +3,7 @@
 #include <unistd.h>
 
 #include <array>
+#include <gsl/gsl>
 #include <iostream>
 
 int main(int argc, char *argv[]) {
@@ -32,7 +33,8 @@ int main(int argc, char *argv[]) {
 
     socklen_t addrlen{sizeof(address)};
 
-    // Bind the socket to the network address and port
+    // Bind the socket to the network address and port//
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
     if (bind(server_fd, reinterpret_cast<sockaddr *>(&address),
              sizeof(address)) < 0) {
         perror("bind failed");
@@ -48,6 +50,7 @@ int main(int argc, char *argv[]) {
     std::cout << "Listening..." << std::endl;
 
     // Accept an incoming connection
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
     if ((new_socket = accept(server_fd, reinterpret_cast<sockaddr *>(&address),
                              &addrlen)) < 0) {
         perror("accept");

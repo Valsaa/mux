@@ -4,6 +4,7 @@
 #include <unistd.h>
 
 #include <cstring>
+#include <gsl/gsl>
 #include <iostream>
 
 int main(int argc, char *argv[]) {
@@ -29,6 +30,7 @@ int main(int argc, char *argv[]) {
     }
 
     // Connect to server
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
     if (connect(sock, reinterpret_cast<sockaddr *>(&srv_addr),
                 sizeof(srv_addr)) < 0) {
         perror("connection failed");
