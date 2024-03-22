@@ -1,0 +1,7 @@
+# Clang tidy rules
+
+---
+Checks: 'cppcoreguidelines*, google*'
+WarningsAsErrors: true
+HeaderFilterRegex: '.*(?:build)'
+FormatStyle: file
