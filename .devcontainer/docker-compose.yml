@@ -7,7 +7,37 @@ services:
     volumes:
       - ../..:/workspaces:cached
     #  - projectname-bashhistory:/commandhistory
+    networks: 
+      - admin
     command: sleep infinity
 
+  client:
+    build:
+      context: client
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    volumes:
+      - ../build:/home/user/mux
+    networks: 
+      - client_server
+      - admin    
+    command: sleep infinity
+    
+  server:
+    build:
+      context: server
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    volumes:
+      - ../build:/home/user/mux
+    networks: 
+      - client_server
+      - admin
+    command: sleep infinity
+    
 #volumes:
 #  projectname-bashhistory:
+
+networks:
+  admin:
+  client_server:
