@@ -1,0 +1,22 @@
+name: docs
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run make ci-build in dev container
+        uses: devcontainers/ci@v0.3
+        with:    
+          # [Optional] If you have a separate workflow like the one above
+          # to pre-build your container image, you can reference it here
+          # to speed up your application build workflows as well!
+          cacheFrom: ghcr.io/mux/mux-devcontainer
+
+          push: never
+          runCmd: make ci-build

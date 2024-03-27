@@ -19,7 +19,8 @@
         "ms-vscode.cmake-tools",
         "ms-azuretools.vscode-docker",
         "eamodio.gitlens",
-        "ms-python.python"
+        "ms-python.python",
+        "GitHub.vscode-github-actions"
       ]
     }
   }
