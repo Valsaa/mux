@@ -44,7 +44,7 @@ int main(const int argc, const char *argv[]) {
       listen = true;
       options.parse_positional({"port"});
       result = options.parse(argc, argv);
-      sockaddr.hostname = "0.0.0.0";  
+      sockaddr.hostname = "0.0.0.0";
       sockaddr.port = result["port"].as<int>();
     } else {
       listen = false;
@@ -55,7 +55,7 @@ int main(const int argc, const char *argv[]) {
       message = result["message"].as<std::string>();
     }
 
-  } catch (const std::exception &e) {    
+  } catch (const std::exception &e) {
     std::cout << options.help() << std::endl;
     return EXIT_FAILURE;
   }

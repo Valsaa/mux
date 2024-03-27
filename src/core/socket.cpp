@@ -9,12 +9,7 @@
 #include <exception>
 #include <string>
 
-namespace mux {
-
-int tcp_connect(const SockAddr sockaddr);
-int tcp_listen(const SockAddr sockaddr);
-
-void tcp_client(const SockAddr sockaddr, const std::string message) {
+void mux::tcp_client(const SockAddr sockaddr, const std::string message) {
   // Connect to hostname:port by opening socket
   auto sfd = mux::tcp_connect(sockaddr);
   spdlog::info("successful connection to {}:{}", sockaddr.hostname,
@@ -33,7 +28,7 @@ void tcp_client(const SockAddr sockaddr, const std::string message) {
   }
 }
 
-void tcp_server(const SockAddr sockaddr) {
+void mux::tcp_server(const mux::SockAddr sockaddr) {
   std::string host(NI_MAXHOST, '\0');
   std::string service(NI_MAXSERV, '\0');
   sockaddr_storage peer_addr{};
@@ -75,7 +70,7 @@ void tcp_server(const SockAddr sockaddr) {
   }
 }
 
-int tcp_connect(const SockAddr sockaddr) {
+int mux::tcp_connect(const mux::SockAddr sockaddr) {
   // Translate network address
   addrinfo* addrs{nullptr};
   const addrinfo hints{0, AF_UNSPEC, SOCK_STREAM, 0,
@@ -132,7 +127,7 @@ int tcp_connect(const SockAddr sockaddr) {
   return sfd;
 }
 
-int tcp_listen(const SockAddr sockaddr) {
+int mux::tcp_listen(const mux::SockAddr sockaddr) {
   // Translate network address
   addrinfo* addrs{nullptr};
   const addrinfo hints{AI_PASSIVE, AF_UNSPEC, SOCK_STREAM, 0,
@@ -188,4 +183,3 @@ int tcp_listen(const SockAddr sockaddr) {
 
   return sfd;
 }
-}  // namespace mux

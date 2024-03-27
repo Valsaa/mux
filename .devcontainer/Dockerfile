@@ -1,19 +1,26 @@
 FROM mcr.microsoft.com/devcontainers/base:bullseye
 
-# Install some utils
+# Install system utils
 RUN apt-get update && apt-get install -y --no-install-recommends \
     python3                     \
+    python3-dev                 \
+    python3-pyaudio             \
     python3-pip                 \
     wget                        \
     ca-certificates             \
     lsb-release                 \
     software-properties-common  \
-    gnupg
+    gnupg                       \
+    doxygen
 
-# Install pre-commit
-RUN pip install \
-    pre-commit  \
-    pytest
+# Install python utils
+RUN pip install         \
+    pre-commit          \
+    pytest              \
+    sphinx              \
+    sphinx_rtd_theme    \
+    sphinx-sitemap      \
+    breathe
 
 # Install clang++ and related tools
 RUN set -ex && \
@@ -24,11 +31,3 @@ RUN set -ex && \
 
 # Install CMake
 RUN wget -qO- "https://cmake.org/files/v3.20/cmake-3.20.6-linux-x86_64.tar.gz" | tar --strip-components=1 -xz -C /usr/local
-
-# Persitent bash history
-#ARG USERNAME="vscode"
-#RUN SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhistory/.bash_history" \
-#    && mkdir /commandhistory \
-#    && touch /commandhistory/.bash_history \
-#    && chown -R $USERNAME /commandhistory \
-#    && echo "$SNIPPET" >> "/home/$USERNAME/.bashrc"
