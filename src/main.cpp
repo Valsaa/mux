@@ -23,7 +23,7 @@ int main(const int argc, const char *argv[]) {
   // Parse arguments
 
   // clang-format off
-  cxxopts::Options options("TCP Mux", "A TCP/IP multiplexer");
+  cxxopts::Options options("mux", "A TCP/IP multiplexer");
   options.add_options()
     ("h, help", "help page")
     ("l, listen", "enable listen mode")
@@ -39,30 +39,24 @@ int main(const int argc, const char *argv[]) {
       return EXIT_SUCCESS;
     }
 
-    // Change parsing of positional arguments based on listen parameter
+    // Positional arg parsing depending on the listen parameter
     if (result.count("listen")) {
       listen = true;
       options.parse_positional({"port"});
       result = options.parse(argc, argv);
+      sockaddr.hostname = "0.0.0.0";  
+      sockaddr.port = result["port"].as<int>();
     } else {
       listen = false;
       options.parse_positional({"hostname", "port", "message"});
       result = options.parse(argc, argv);
-    }
-
-    if (result.count("hostname")) {
       sockaddr.hostname = result["hostname"].as<std::string>();
-    }
-
-    if (result.count("port")) {
       sockaddr.port = result["port"].as<int>();
-    }
-
-    if (result.count("message")) {
       message = result["message"].as<std::string>();
     }
-  } catch (const std::exception &e) {
-    spdlog::error("Error while parsing options: {}", e.what());
+
+  } catch (const std::exception &e) {    
+    std::cout << options.help() << std::endl;
     return EXIT_FAILURE;
   }
 

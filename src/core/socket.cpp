@@ -44,7 +44,7 @@ void tcp_server(const SockAddr sockaddr) {
   const auto BUFFER_SIZE{20};
   std::array<char, BUFFER_SIZE> buffer = {0};
   auto sfd = mux::tcp_listen(sockaddr);
-  spdlog::info("listening to {}", sockaddr.port);
+  spdlog::info("listening to {}:{}", sockaddr.hostname, sockaddr.port);
 
   for (;;) {
     // Accept an incoming connection (blocking call)
