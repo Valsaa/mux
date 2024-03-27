@@ -4,9 +4,15 @@
 #include <string>
 
 namespace mux {
-void tcp_client(const std::string hostname, const std::string port,
-                const std::string message);
-void tcp_server(const std::string port);
+
+struct SockAddr {
+    std::string hostname;
+    int port;
+};
+typedef struct SockAddr SockAddr;
+
+void tcp_client(const SockAddr sockaddr, const std::string message);
+void tcp_server(const SockAddr sockaddr);
 }  // namespace mux
 
 #endif  // SOCKET_H

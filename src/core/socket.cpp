@@ -11,14 +11,13 @@
 
 namespace mux {
 
-int tcp_connect(const std::string hostname, const std::string port);
-int tcp_listen(const std::string port);
+int tcp_connect(const SockAddr sockaddr);
+int tcp_listen(const SockAddr sockaddr);
 
-void tcp_client(const std::string hostname, const std::string port,
-                const std::string message) {
+void tcp_client(const SockAddr sockaddr, const std::string message) {
   // Connect to hostname:port by opening socket
-  auto sfd = mux::tcp_connect(hostname, port);
-  spdlog::info("successful connection to {}:{}", hostname, port);
+  auto sfd = mux::tcp_connect(sockaddr);
+  spdlog::info("successful connection to {}:{}", sockaddr.hostname, sockaddr.port);
 
   ssize_t nread{0};
   if ((nread = send(sfd, message.data(), message.size(), 0)) == -1) {
@@ -33,7 +32,7 @@ void tcp_client(const std::string hostname, const std::string port,
   }
 }
 
-void tcp_server(const std::string port) {
+void tcp_server(const SockAddr sockaddr) {
   std::string host(NI_MAXHOST, '\0');
   std::string service(NI_MAXSERV, '\0');
   sockaddr_storage peer_addr{};
@@ -43,19 +42,19 @@ void tcp_server(const std::string port) {
 
   const auto BUFFER_SIZE{20};
   std::array<char, BUFFER_SIZE> buffer = {0};
-  auto sfd = mux::tcp_listen(port);
-  spdlog::info("listening to {}", port);
+  auto sfd = mux::tcp_listen(sockaddr);
+  spdlog::info("listening to {}", sockaddr.port);
 
   for (;;) {
     // Accept an incoming connection (blocking call)
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-    if ((cfd = accept(sfd, reinterpret_cast<sockaddr*>(&peer_addr),
+    if ((cfd = accept(sfd, reinterpret_cast<struct sockaddr*>(&peer_addr),
                       &peer_addrlen)) == -1) {
       spdlog::error(std::strerror(errno));
     }
 
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-    const auto status = getnameinfo(reinterpret_cast<sockaddr*>(&peer_addr),
+    const auto status = getnameinfo(reinterpret_cast<struct sockaddr*>(&peer_addr),
                                     peer_addrlen, host.data(), NI_MAXHOST,
                                     service.data(), NI_MAXSERV, NI_NUMERICSERV);
     if (status != 0) {
@@ -75,21 +74,21 @@ void tcp_server(const std::string port) {
   }
 }
 
-int tcp_connect(const std::string hostname, const std::string port) {
+int tcp_connect(const SockAddr sockaddr) {
   // Translate network address
   addrinfo* addrs{nullptr};
   const addrinfo hints{0, AF_UNSPEC, SOCK_STREAM, 0,
                        0, nullptr,   nullptr,     nullptr};
   const auto status =
-      getaddrinfo(hostname.c_str(), port.c_str(), &hints, &addrs);
+      getaddrinfo(sockaddr.hostname.c_str(), std::to_string(sockaddr.port).c_str(), &hints, &addrs);
   if (status != 0) {
     throw std::runtime_error(gai_strerror(status));
   }
   if (addrs == nullptr) {
-    throw std::runtime_error("translation error for " + hostname + ":" + port);
+    throw std::runtime_error("translation error for " + sockaddr.hostname + ":" + std::to_string(sockaddr.port));
   }
 
-  spdlog::debug("network addresses translated from {}:{}", hostname, port);
+  spdlog::debug("network addresses translated from {}:{}", sockaddr.hostname, sockaddr.port);
 
   auto sfd{0};
   addrinfo* addr{nullptr};
@@ -129,17 +128,17 @@ int tcp_connect(const std::string hostname, const std::string port) {
   return sfd;
 }
 
-int tcp_listen(const std::string port) {
+int tcp_listen(const SockAddr sockaddr) {
   // Translate network address
   addrinfo* addrs{nullptr};
   const addrinfo hints{AI_PASSIVE, AF_UNSPEC, SOCK_STREAM, 0,
                        0,          nullptr,   nullptr,     nullptr};
-  const auto status = getaddrinfo(nullptr, port.c_str(), &hints, &addrs);
+  const auto status = getaddrinfo(sockaddr.hostname.c_str(), std::to_string(sockaddr.port).c_str(), &hints, &addrs);
   if (status != 0) {
     throw std::runtime_error(gai_strerror(status));
   }
 
-  spdlog::debug("network addresses translated from {}", port);
+  spdlog::debug("network addresses translated from {}", sockaddr.port);
 
   const auto opt{1};
   auto sfd{0};

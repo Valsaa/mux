@@ -7,8 +7,7 @@
 #include "logger.h"
 
 int main(const int argc, const char *argv[]) {
-  std::string hostname{""};
-  std::string port{""};
+  mux::SockAddr sockaddr {};
   std::string message{""};
   bool listen{false};
 
@@ -29,7 +28,7 @@ int main(const int argc, const char *argv[]) {
     ("h, help", "help page")
     ("l, listen", "enable listen mode")
     ("hostname", "hostname", cxxopts::value<std::string>())
-    ("port", "port number", cxxopts::value<std::string>())
+    ("port", "port number", cxxopts::value<int>())
     ("message", "message to send", cxxopts::value<std::string>());
   // clang-format on
 
@@ -52,11 +51,11 @@ int main(const int argc, const char *argv[]) {
     }
 
     if (result.count("hostname")) {
-      hostname = result["hostname"].as<std::string>();
+      sockaddr.hostname = result["hostname"].as<std::string>();
     }
 
     if (result.count("port")) {
-      port = result["port"].as<std::string>();
+      sockaddr.port = result["port"].as<int>();
     }
 
     if (result.count("message")) {
@@ -71,14 +70,14 @@ int main(const int argc, const char *argv[]) {
 
   if (listen) {
     try {
-      mux::tcp_server(port);
+      mux::tcp_server(sockaddr);
     } catch (const std::runtime_error &e) {
       spdlog::error("server failed: {}", e.what());
       return EXIT_FAILURE;
     }
   } else {
     try {
-      mux::tcp_client(hostname, port, message);
+      mux::tcp_client(sockaddr, message);
     } catch (const std::runtime_error &e) {
       spdlog::error("client failed: {}", e.what());
       return EXIT_FAILURE;
