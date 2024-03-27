@@ -16,11 +16,12 @@ cmake_path(APPEND src_dir ${root_dir} "src")
 cmake_path(APPEND tests_dir ${root_dir} "tests")
 cmake_path(APPEND bin_dir ${CMAKE_CURRENT_BINARY_DIR} "bin")
 
+# Includes
 include("${cmake_dir}/third_party.cmake")
 include("${cmake_dir}/utils.cmake")
 message("-- Custom CMake files included")
 
-# Mux target
+# Core lib target
 cmake_path(APPEND core_dir ${src_dir} "core")
 file(GLOB core_SOURCES "${core_dir}/*.cpp")
 add_library(core ${core_SOURCES})
@@ -32,9 +33,10 @@ target_link_libraries(core
 )
 _set_compilers_options(core)
 
-# App target
+# Mux bin target
 file(GLOB mux_SOURCES "${src_dir}/*.cpp")
 add_executable(mux ${mux_SOURCES})
+set_target_properties(mux PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${bin_dir})
 target_compile_features(mux PRIVATE cxx_std_23)
 target_link_libraries(mux
     PRIVATE

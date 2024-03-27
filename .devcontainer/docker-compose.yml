@@ -6,37 +6,45 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ../..:/workspaces:cached
-    #  - projectname-bashhistory:/commandhistory
     networks: 
       - admin
     command: sleep infinity
 
   client:
     build:
-      context: client
+      context: nw_node
       dockerfile: Dockerfile
     restart: unless-stopped
     volumes:
-      - ../build:/home/user/mux
+      - ../build/bin:/home/user/mux
     networks: 
       - client_server
       - admin    
     command: sleep infinity
+
+  #node:
+  #  build:
+  #    context: nw_node
+  #    dockerfile: Dockerfile
+  #  restart: unless-stopped
+  #  volumes:
+  #    - ../build/bin:/home/user/mux
+  #  networks: 
+  #    - client_server
+  #    - admin    
+  #  command: sleep infinity
     
   server:
     build:
-      context: server
+      context: nw_node
       dockerfile: Dockerfile
     restart: unless-stopped
     volumes:
-      - ../build:/home/user/mux
+      - ../build/bin:/home/user/mux
     networks: 
       - client_server
       - admin
     command: sleep infinity
-    
-#volumes:
-#  projectname-bashhistory:
 
 networks:
   admin:
