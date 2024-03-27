@@ -7,7 +7,7 @@
 #include "logger.h"
 
 int main(const int argc, const char *argv[]) {
-  mux::SockAddr sockaddr {};
+  mux::SockAddr sockaddr{};
   std::string message{""};
   bool listen{false};
 

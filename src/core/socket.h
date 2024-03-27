@@ -6,8 +6,8 @@
 namespace mux {
 
 struct SockAddr {
-    std::string hostname;
-    int port;
+  std::string hostname;
+  int port;
 };
 typedef struct SockAddr SockAddr;
 

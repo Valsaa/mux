@@ -13,7 +13,7 @@ get_filename_component(root_dir ${CMAKE_CURRENT_SOURCE_DIR} REALPATH)
 message("-- root_dir is ${root_dir}")
 cmake_path(APPEND cmake_dir ${root_dir} "cmake")
 cmake_path(APPEND src_dir ${root_dir} "src")
-cmake_path(APPEND tests_dir ${root_dir} "tests")
+cmake_path(APPEND tests_dir ${root_dir} "tests/unit")
 cmake_path(APPEND bin_dir ${CMAKE_CURRENT_BINARY_DIR} "bin")
 
 # Includes

@@ -6,7 +6,7 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ../..:/workspaces:cached
-    networks: 
+    networks:
       - admin
     command: sleep infinity
 
@@ -17,9 +17,9 @@ services:
     restart: unless-stopped
     volumes:
       - ../build/bin:/home/user/mux
-    networks: 
+    networks:
       - client_server
-      - admin    
+      - admin
     command: sleep infinity
 
   #node:
@@ -29,11 +29,11 @@ services:
   #  restart: unless-stopped
   #  volumes:
   #    - ../build/bin:/home/user/mux
-  #  networks: 
+  #  networks:
   #    - client_server
-  #    - admin    
+  #    - admin
   #  command: sleep infinity
-    
+
   server:
     build:
       context: nw_node
@@ -41,7 +41,7 @@ services:
     restart: unless-stopped
     volumes:
       - ../build/bin:/home/user/mux
-    networks: 
+    networks:
       - client_server
       - admin
     command: sleep infinity

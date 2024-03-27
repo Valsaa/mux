@@ -10,7 +10,28 @@ repos:
         exclude: .clang-format
     -   id: check-added-large-files
 
+# clang-format
 -   repo: https://github.com/pre-commit/mirrors-clang-format
     rev: v18.1.1
     hooks:
     -   id: clang-format
+
+# isort
+-   repo: https://github.com/pycqa/isort
+    rev: 5.13.2
+    hooks:
+    -   id: isort
+        name: isort (python)
+
+
+# black
+-   repo: https://github.com/psf/black
+    rev: 24.3.0
+    hooks:
+    -   id: black
+
+# flake8
+-   repo: https://github.com/pycqa/flake8
+    rev: 7.0.0
+    hooks:
+    -   id: flake8

@@ -17,7 +17,8 @@ int tcp_listen(const SockAddr sockaddr);
 void tcp_client(const SockAddr sockaddr, const std::string message) {
   // Connect to hostname:port by opening socket
   auto sfd = mux::tcp_connect(sockaddr);
-  spdlog::info("successful connection to {}:{}", sockaddr.hostname, sockaddr.port);
+  spdlog::info("successful connection to {}:{}", sockaddr.hostname,
+               sockaddr.port);
 
   ssize_t nread{0};
   if ((nread = send(sfd, message.data(), message.size(), 0)) == -1) {
@@ -54,9 +55,9 @@ void tcp_server(const SockAddr sockaddr) {
     }
 
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-    const auto status = getnameinfo(reinterpret_cast<struct sockaddr*>(&peer_addr),
-                                    peer_addrlen, host.data(), NI_MAXHOST,
-                                    service.data(), NI_MAXSERV, NI_NUMERICSERV);
+    const auto status = getnameinfo(
+        reinterpret_cast<struct sockaddr*>(&peer_addr), peer_addrlen,
+        host.data(), NI_MAXHOST, service.data(), NI_MAXSERV, NI_NUMERICSERV);
     if (status != 0) {
       spdlog::error(gai_strerror(status));
     }
@@ -80,15 +81,18 @@ int tcp_connect(const SockAddr sockaddr) {
   const addrinfo hints{0, AF_UNSPEC, SOCK_STREAM, 0,
                        0, nullptr,   nullptr,     nullptr};
   const auto status =
-      getaddrinfo(sockaddr.hostname.c_str(), std::to_string(sockaddr.port).c_str(), &hints, &addrs);
+      getaddrinfo(sockaddr.hostname.c_str(),
+                  std::to_string(sockaddr.port).c_str(), &hints, &addrs);
   if (status != 0) {
     throw std::runtime_error(gai_strerror(status));
   }
   if (addrs == nullptr) {
-    throw std::runtime_error("translation error for " + sockaddr.hostname + ":" + std::to_string(sockaddr.port));
+    throw std::runtime_error("translation error for " + sockaddr.hostname +
+                             ":" + std::to_string(sockaddr.port));
   }
 
-  spdlog::debug("network addresses translated from {}:{}", sockaddr.hostname, sockaddr.port);
+  spdlog::debug("network addresses translated from {}:{}", sockaddr.hostname,
+                sockaddr.port);
 
   auto sfd{0};
   addrinfo* addr{nullptr};
@@ -133,7 +137,9 @@ int tcp_listen(const SockAddr sockaddr) {
   addrinfo* addrs{nullptr};
   const addrinfo hints{AI_PASSIVE, AF_UNSPEC, SOCK_STREAM, 0,
                        0,          nullptr,   nullptr,     nullptr};
-  const auto status = getaddrinfo(sockaddr.hostname.c_str(), std::to_string(sockaddr.port).c_str(), &hints, &addrs);
+  const auto status =
+      getaddrinfo(sockaddr.hostname.c_str(),
+                  std::to_string(sockaddr.port).c_str(), &hints, &addrs);
   if (status != 0) {
     throw std::runtime_error(gai_strerror(status));
   }

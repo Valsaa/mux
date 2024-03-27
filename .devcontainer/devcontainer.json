@@ -18,7 +18,8 @@
         "xaver.clang-format",
         "ms-vscode.cmake-tools",
         "ms-azuretools.vscode-docker",
-        "eamodio.gitlens"
+        "eamodio.gitlens",
+        "ms-python.python"
       ]
     }
   }

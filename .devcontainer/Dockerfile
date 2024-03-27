@@ -2,16 +2,18 @@ FROM mcr.microsoft.com/devcontainers/base:bullseye
 
 # Install some utils
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    python3 \
-    python3-pip \
-    wget \
-    ca-certificates \
-    lsb-release \
-    software-properties-common \
+    python3                     \
+    python3-pip                 \
+    wget                        \
+    ca-certificates             \
+    lsb-release                 \
+    software-properties-common  \
     gnupg
 
 # Install pre-commit
-RUN pip install pre-commit
+RUN pip install \
+    pre-commit  \
+    pytest
 
 # Install clang++ and related tools
 RUN set -ex && \
