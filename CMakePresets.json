@@ -1,0 +1,67 @@
+{
+  "version": 2,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 20,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "default",
+      "hidden": true,
+      "binaryDir": "${sourceDir}/_build/${presetName}"
+    },
+    {
+      "name": "default-x64-linux",
+      "hidden": true,
+      "inherits": [
+        "default"
+      ],
+      "generator": "Ninja",
+      "architecture": {
+        "value": "x64",
+        "strategy": "external"
+      },
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "clang-18",
+        "CMAKE_CXX_COMPILER": "clang++-18"
+      }
+    },
+    {
+      "name": "linux-x64-debug",
+      "displayName": "Linux x64 Debug",
+      "description": "Default debug build using Ninja Generator",
+      "inherits": [
+        "default-x64-linux"
+      ],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "linux-x64-release",
+      "displayName": "Linux x64 Release",
+      "description": "Default release build using Ninja Generator",
+      "inherits": [
+        "default-x64-linux"
+      ],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "linux-x64-debug",
+      "displayName": "Linux x64 Debug",
+      "description": "Default debug build using Ninja Generator",
+      "configurePreset": "linux-x64-debug"
+    },
+    {
+      "name": "linux-x64-release",
+      "displayName": "Linux x64 Release",
+      "description": "Default release build using Ninja Generator",
+      "configurePreset": "linux-x64-release"
+    }
+  ]
+}

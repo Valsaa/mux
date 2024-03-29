@@ -7,8 +7,39 @@ on: # rebuild any PRs and main branch changes
       - ci
 
 jobs:
-  build:
-    runs-on: ubuntu-latest    
+  linux-x64-debug:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout (GitHub)
+        uses: actions/checkout@v4
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and run Dev Container task
+        uses: devcontainers/ci@v0.3
+        with:
+          imageName: ghcr.io/${{ github.repository }}/mux-devcontainer
+          runCmd: |
+            cmake --preset ${{ github.job }}
+            cmake --build --preset ${{ github.job }}
+
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ github.job }}
+          path: |
+            ${{ github.workspace }}/_build/${{ github.job }}/bin/${{ github.event.repository.name }}
+
+  linux-x64-release:
+    runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
@@ -28,12 +59,12 @@ jobs:
         with:
           imageName: ghcr.io/valsaa/mux/mux-devcontainer
           runCmd: |
-            cmake --no-warn-unused-cli -DCMAKE_BUILD_TYPE:STRING=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_C_COMPILER:FILEPATH=/usr/bin/clang-18 -DCMAKE_CXX_COMPILER:FILEPATH=/usr/bin/clang++-18 -S/workspaces/mux -B/workspaces/mux/ci-build -G "Unix Makefiles"
-            cmake --build /workspaces/mux/ci-build --config Debug --target all
+            cmake --preset ${{ github.job }}
+            cmake --build --preset ${{ github.job }}
 
       - name: Archive production artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: binaries
+          name: ${{ github.job }}
           path: |
-            ${{ github.workspace }}/ci-build/bin/*
+            ${{ github.workspace }}/_build/${{ github.job }}/bin/${{ github.event.repository.name }}

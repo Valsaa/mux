@@ -10,6 +10,9 @@
   // Fix dubious ownershir fatal error message from git command
   "postStartCommand": "git config --global --add safe.directory ${containerWorkspaceFolder}",
 
+  // Install pre-commit hooks
+  "postAttachCommand": "pre-commit install",
+
   // Auto install some QoL development extensions
   "customizations": {
     "vscode": {

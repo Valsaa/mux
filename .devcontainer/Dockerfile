@@ -1,6 +1,6 @@
 FROM mcr.microsoft.com/devcontainers/base:bullseye
 
-# Install system utils
+# Install system utils and ninja
 RUN apt-get update && apt-get install -y --no-install-recommends \
     python3                     \
     python3-dev                 \
@@ -29,5 +29,11 @@ RUN set -ex && \
     apt update && \
     apt-get install -y clang-18 lldb-18 clang-format-18 clang-tidy-18
 
-# Install CMake
-RUN wget -qO- "https://cmake.org/files/v3.20/cmake-3.20.6-linux-x86_64.tar.gz" | tar --strip-components=1 -xz -C /usr/local
+# Download and install Ninja
+RUN wget --quiet --output-document=/tmp/ninja.zip "https://github.com/ninja-build/ninja/releases/download/v1.11.1/ninja-linux.zip" && \
+    unzip -d /usr/local/bin /tmp/ninja.zip && \
+    rm -f /tmp/ninja.zip
+
+# Download and install CMake
+RUN wget --quiet --output-document=- "https://cmake.org/files/v3.20/cmake-3.20.6-linux-x86_64.tar.gz" | \
+    tar --strip-components=1 --extract --gzip --directory /usr/local
